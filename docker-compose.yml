@@ -1,0 +1,35 @@
+services: 
+
+  xui:
+    image: zai7lou/x-ui:latest
+    container_name: x-ui
+    restart: always
+    volumes:
+      - ./xui/db:/etc/x-ui
+      - ./letsencrypt:/letsencrypt # 证书文件
+    ports:
+      - 50000:54321 # 面板端口
+      - 50001:50001 # 预留代理端口
+      - 50002:50002 # 预留代理端口
+      - 50003:50003 # 预留代理端口
+      - 50004:50004 # 预留代理端口
+      - 50005:50005 # 预留代理端口
+      - 50006:50006 # 预留代理端口
+
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: always
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d # 子配置文件夹
+      - ./nginx/log:/var/log/nginx # 日志
+      - ./nginx/acme:/acme # acme安装脚本及nginx配置文件
+      - ./letsencrypt:/letsencrypt #证书文件
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - TLS_EMAIL=yourmail@qq.com # TLS的邮箱，请自行修改
+      - NGINX_HOST=xui.test.tk # 域名，请自行修改
+      - NGINX_PORT=80
