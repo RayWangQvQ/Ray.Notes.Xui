@@ -9,6 +9,9 @@
 ### 
 # set -e
 
+echo "Host:$NGINX_HOST"
+echo "Email:$TLS_EMAIL"
+
 echo -e "\n----------------更新包----------------"
 apt-get update
 
@@ -20,7 +23,10 @@ echo -e "\n----------------安装acme.sh----------------"
 curl  https://get.acme.sh | sh -s email=$TLS_EMAIL
 
 echo -e "\n----------------生成证书----------------"
+rm /etc/nginx/conf.d/xui_ssl.conf
 sed -i 's|\${NGINX_HOST}|'"$NGINX_HOST"'|g' /etc/nginx/conf.d/xui.conf
+nginx -t
+nginx -s reload
 ~/.acme.sh/acme.sh --issue -d $NGINX_HOST --nginx /etc/nginx/conf.d/xui.conf
 
 echo -e "\n----------------复制证书----------------"
