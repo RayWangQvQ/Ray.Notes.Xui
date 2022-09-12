@@ -6,39 +6,44 @@ set -o pipefail
 host=""
 email=""
 
-while [ $# -ne 0 ]
-do
-    host="$1"
-    email="$2"
-    echo "host:$host"
-    echo "email:$email"
-done
+host="$1"
+email="$2"
+echo "host: $host"
+echo "email: $email"
 
-# 下载docker-compose
-echo -e "\n下载docker-compose"
+# 下载docker-compose文件
+echo -e "\n==========下载docker-compose文件=========="
 wget https://raw.githubusercontent.com/RayWangQvQ/Ray.Notes.Xui/main/docker-compose.yml
 
 # 下载xui.conf
-echo -n "\n下载xui.conf"
-mkdir -p ./conf.d
-cd ./conf.d
+echo -e "\n==========下载xui.conf=========="
+mkdir -p ./nginx/conf.d
+cd ./nginx/conf.d
+rm -f xui.conf
 wget https://raw.githubusercontent.com/RayWangQvQ/Ray.Notes.Xui/main/nginx/conf.d/xui.conf
 
 # 下载xui_ssl.conf、enableSSL.sh
-echo -e "\n下载xui_ssl.conf、enableSSL.sh"
-cd ..
+echo -e "\n==========下载xui_ssl.conf、enableSSL.sh=========="
+cd ../
+mkdir -p ./acme
+cd ./acme
+rm -f xui_ssl.conf
 wget https://raw.githubusercontent.com/RayWangQvQ/Ray.Notes.Xui/main/nginx/acme/xui_ssl.conf
+rm -f enableSSL.sh
 wget https://raw.githubusercontent.com/RayWangQvQ/Ray.Notes.Xui/main/nginx/acme/enableSSL.sh
 
 # 替换环境变量
-echo -e "\n替换host"
-sed -i 's|- NGINX_HOST=|- NGINX_HOST='"$host"'|g' ./docker-compose.yml
-echo -e "\n替换email"
-sed -i 's|- TLS_EMAIL=|- TLS_EMAIL='"$email"'|g' ./docker-compose.yml
+cd ../..
+echo -e "\n==========替换host=========="
+sed -i 's|- NGINX_HOST=.*|- NGINX_HOST='"$host"'|g' ./docker-compose.yml
+echo -e "\n==========替换email=========="
+sed -i 's|- TLS_EMAIL=.*|- TLS_EMAIL='"$email"'|g' ./docker-compose.yml
 cat ./docker-compose.yml
 
-echo -e "\n启动http站点"
+echo -e "\n==========启动http站点=========="
+docker compose down
 docker compose up -d
+docker ps
 
-echo -e "\n启动https站点"
+echo -e "\n==========启动https站点=========="
 docker exec -it nginx bash /acme/enableSSL.sh
