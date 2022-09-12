@@ -30,6 +30,6 @@ services:
       - 80:80
       - 443:443
     environment:
-      - TLS_EMAIL=yourmail@qq.com # TLS的邮箱，请自行修改
-      - NGINX_HOST=xui.test.tk # 域名，请自行修改
+      - TLS_EMAIL=
+      - NGINX_HOST=
       - NGINX_PORT=80
