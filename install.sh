@@ -13,6 +13,7 @@ echo "email: $email"
 
 # 下载docker-compose文件
 echo -e "\n==========下载docker-compose文件=========="
+rm -rf ./docker-compose.yml
 wget https://raw.githubusercontent.com/RayWangQvQ/Ray.Notes.Xui/main/docker-compose.yml
 
 # 下载xui.conf
@@ -34,13 +35,16 @@ wget https://raw.githubusercontent.com/RayWangQvQ/Ray.Notes.Xui/main/nginx/acme/
 
 # 替换环境变量
 cd ../..
-echo -e "\n==========替换host=========="
+echo -e "\n==========替换docker-compose.yml的host=========="
 sed -i 's|- NGINX_HOST=.*|- NGINX_HOST='"$host"'|g' ./docker-compose.yml
-echo -e "\n==========替换email=========="
+echo -e "\n==========替换docker-compose.yml的email=========="
 sed -i 's|- TLS_EMAIL=.*|- TLS_EMAIL='"$email"'|g' ./docker-compose.yml
 cat ./docker-compose.yml
 
 echo -e "\n==========启动http站点=========="
+sed -i 's|\${NGINX_HOST}|'"$host"'|g' ./nginx/conf.d/xui.conf
+rm -rf ./nginx/conf.d/xui_ssl.conf
+cat ./nginx/conf.d/xui.conf
 docker compose down
 docker compose up -d
 docker ps

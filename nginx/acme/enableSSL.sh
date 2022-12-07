@@ -30,7 +30,7 @@ ls /etc/nginx/conf.d/
 cat /etc/nginx/conf.d/xui.conf
 nginx -t
 nginx -s reload
-~/.acme.sh/acme.sh --issue -d $NGINX_HOST --nginx /etc/nginx/conf.d/xui.conf
+~/.acme.sh/acme.sh --issue -d $NGINX_HOST --nginx /etc/nginx/conf.d/xui.conf --debug 2
 
 echo -e "\n----------------复制证书----------------"
 mkdir /letsencrypt/$NGINX_HOST
