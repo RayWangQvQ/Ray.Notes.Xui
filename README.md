@@ -3,9 +3,10 @@
 ## 说明
 基于`docker`一键搭建`x-ui`。
 
-- 基于`x-ui`的`docker`镜像
+- 基于[x-ui](https://github.com/vaxilu/x-ui)的[docker镜像](https://hub.docker.com/repository/docker/zai7lou/x-ui)
 - 使用`nginx`作为反代服务器
 - 使用`Let'sEncrypt`作为`CA`方
+- 使用[acme](https://github.com/acmesh-official/acme.sh)生成管理证书
 
 思路：下载一键安装脚本`./install.sh`, 脚本会先生成http站点，此时80端口正常工作，然后利用acme生成CA证书，完成https站点部署。
 
