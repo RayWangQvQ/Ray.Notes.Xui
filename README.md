@@ -21,7 +21,7 @@ mkdir -p ./myxui
 cd ./myxui
 wget https://raw.githubusercontent.com/RayWangQvQ/Ray.Notes.Xui/main/install.sh
 chmod +x ./install.sh
-./install.sh xui.test.com mail@qq.com
+./install.sh --host xui.test.com --mail mail@qq.com
 ```
 
 其中`xui.test.com`换成自己真实域名，`mail@qq.com`换成自己真实邮箱（乱填会导致`acme`生成证书时异常）

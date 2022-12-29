@@ -6,10 +6,58 @@ set -o pipefail
 host=""
 email=""
 
-host="$1"
-email="$2"
-echo "host: $host"
-echo "email: $email"
+while [ $# -ne 0 ]
+do
+    name="$1"
+    case "$name" in
+        -t|--host|-[Hh]ost)
+            shift
+            host="$1"
+            ;;
+        -m|--mail|-[Mm]ail)
+            shift
+            email="$1"
+            ;;
+        -?|--?|-h|--help|-[Hh]elp)
+            script_name="$(basename "$0")"
+            echo "Ray XUI Installer"
+            echo "Usage: $script_name [-t|--host <HOST>] [-m|--mail <MAIL>]"
+            echo "       $script_name -h|-?|--help"
+            echo ""
+            echo "$script_name is a simple command line interface for install XUI."
+            echo ""
+            echo "Options:"
+            echo "  -t,--host <HOST>         Your host, Defaults to \`$host\`."
+            echo "      -Host"
+            echo "          Possible values:"
+            echo "          - xui.test.com"
+            echo "  -m,--mail <MAIL>         Your email, Defaults to \`$email\`."
+            echo "      -Mail"
+            echo "          Possible values:"
+            echo "          - mail@qq.com"
+            echo "  -?,--?,-h,--help,-Help             Shows this help message"
+            echo ""
+            exit 0
+            ;;
+        *)
+            say_err "Unknown argument \`$name\`"
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+if [ -z "$host" ]; then
+    read -p "input host:" host
+else
+    echo "host: $vault_username"
+fi
+
+if [ -z "$email" ]; then
+    read -p "input email:" email
+else
+    echo "email: $email"
+fi
 
 # 下载docker-compose文件
 echo -e "\n==========下载docker-compose文件=========="
